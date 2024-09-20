@@ -3,51 +3,53 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2>Welcome, {{ current_user.email }}</h2>
-<div class="row">
-    <div class="col-md-6">
-        <h3>Upload Document</h3>
-        <form id="upload-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="document" class="form-label">Select document (PDF or DOCX)</label>
-                <input type="file" class="form-control" id="document" name="document" accept=".pdf,.docx" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
-        <h4 class="mt-4">Uploaded Documents</h4>
-        <ul id="documents-list" class="list-group">
-            {% for document in documents %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ document.filename }}
-                <button class="btn btn-sm btn-danger delete-document" data-id="{{ document.id }}">Delete</button>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <h3>Generated PROMs</h3>
-        <button id="generate-proms" class="btn btn-secondary mb-3">Generate PROMs</button>
-        <ul id="proms-list" class="list-group" style="display: none;">
-            <!-- PROMs will be dynamically added here -->
-        </ul>
-    </div>
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <h1>Welcome, {{ current_user.email }}</h1>
+    </header>
+    <main class="dashboard-main">
+        <section class="dashboard-section">
+            <h2>Upload Document</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="file-input-wrapper">
+                    <input type="file" id="document" name="document" accept=".pdf,.docx" required>
+                    <label for="document"><i class="fas fa-cloud-upload-alt"></i> Choose file</label>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload</button>
+            </form>
+        </section>
+        <section class="dashboard-section">
+            <h2>Uploaded Documents</h2>
+            <ul id="documents-list" class="documents-list">
+                {% for document in documents %}
+                <li class="document-item">
+                    <span><i class="fas fa-file-alt"></i> {{ document.filename }}</span>
+                    <button class="btn btn-danger btn-sm delete-document" data-id="{{ document.id }}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section class="dashboard-section">
+            <h2>Generated PROMs</h2>
+            <button id="generate-proms" class="btn btn-success mb-3"><i class="fas fa-sync"></i> Generate PROMs</button>
+            <ul id="proms-list" class="proms-list"></ul>
+        </section>
+        <section id="add-prom-section" class="dashboard-section">
+            <h2>Add New PROM</h2>
+            <form id="add-prom-form">
+                <input type="text" id="prom-content" placeholder="PROM Content" required>
+                <input type="number" id="prom-rank" placeholder="Rank" required>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add PROM</button>
+            </form>
+        </section>
+    </main>
 </div>
-<div class="row mt-4" id="add-prom-section" style="display: none;">
-    <div class="col-md-12">
-        <h3>Add New PROM</h3>
-        <form id="add-prom-form">
-            <div class="mb-3">
-                <label for="prom-content" class="form-label">PROM Content</label>
-                <input type="text" class="form-control" id="prom-content" required>
-            </div>
-            <div class="mb-3">
-                <label for="prom-rank" class="form-label">Rank</label>
-                <input type="number" class="form-control" id="prom-rank" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Add PROM</button>
-        </form>
-    </div>
-</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 {% endblock %}
 
 {% block scripts %}
