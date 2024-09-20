@@ -14,7 +14,7 @@ dashboard = Blueprint('dashboard', __name__)
 def index():
     return render_template('dashboard.html')
 
-@dashboard.route('/dashboard/upload', methods=['POST'])
+@dashboard.route('/upload', methods=['POST'])
 @login_required
 def upload_document():
     if 'document' not in request.files:
@@ -39,13 +39,13 @@ def upload_document():
             return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'}), 500
     return jsonify({'status': 'error', 'message': 'File type not allowed'}), 400
 
-@dashboard.route('/dashboard/get_proms', methods=['GET'])
+@dashboard.route('/get_proms', methods=['GET'])
 @login_required
 def get_proms():
     proms = PROM.query.filter_by(user_id=current_user.id).order_by(PROM.rank).all()
     return jsonify([{'id': prom.id, 'content': prom.content, 'rank': prom.rank} for prom in proms])
 
-@dashboard.route('/dashboard/add_prom', methods=['POST'])
+@dashboard.route('/add_prom', methods=['POST'])
 @login_required
 def add_prom():
     content = request.json.get('content')
@@ -76,7 +76,7 @@ def delete_prom(prom_id):
     db.session.commit()
     return '', 204
 
-@dashboard.route('/dashboard/generate_proms', methods=['POST'])
+@dashboard.route('/generate_proms', methods=['POST'])
 @login_required
 def generate_proms():
     try:

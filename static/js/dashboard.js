@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchProms() {
-        fetch('/get_proms')
+        fetch('/dashboard/get_proms')
             .then(response => response.json())
             .then(proms => {
                 console.log('Fetched PROMs:', proms);
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     uploadForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
-        fetch('/upload', {
+        fetch('/dashboard/upload', {
             method: 'POST',
             body: formData
         })
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     generatePromsBtn.addEventListener('click', function() {
         console.log('Generate PROMs button clicked');
-        fetch('/generate_proms', { method: 'POST' })
+        fetch('/dashboard/generate_proms', { method: 'POST' })
             .then(response => {
                 console.log('Response status:', response.status);
                 return response.json();
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const content = document.getElementById('prom-content').value;
         const rank = document.getElementById('prom-rank').value;
-        fetch('/add_prom', {
+        fetch('/dashboard/add_prom', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = e.target.dataset.id;
             const content = prompt('Enter new content:');
             if (content) {
-                fetch(`/update_prom/${id}`, {
+                fetch(`/dashboard/update_prom/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (e.target.classList.contains('delete-prom')) {
             const id = e.target.dataset.id;
             if (confirm('Are you sure you want to delete this PROM?')) {
-                fetch(`/delete_prom/${id}`, { method: 'DELETE' })
+                fetch(`/dashboard/delete_prom/${id}`, { method: 'DELETE' })
                     .then(() => {
                         fetchProms();
                         showMessage('PROM deleted successfully');
