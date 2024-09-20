@@ -3,13 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const generatePromsBtn = document.getElementById('generate-proms');
     const promsList = document.getElementById('proms-list');
     const addPromForm = document.getElementById('add-prom-form');
+    const addPromSection = document.getElementById('add-prom-section');
     
     const messageContainer = document.createElement('div');
     messageContainer.className = 'alert';
     document.querySelector('.container').insertBefore(messageContainer, document.querySelector('.row'));
-
-    const addPromSection = document.querySelector('#add-prom-form').closest('.row');
-    addPromSection.style.display = 'none';
 
     function showMessage(message, isError = false) {
         messageContainer.textContent = message;
@@ -37,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     promsList.appendChild(li);
                 });
+                // Show or hide the add PROM section based on the existence of PROMs
+                addPromSection.classList.toggle('hidden', proms.length === 0);
             });
     }
 
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(() => {
                 fetchProms();
                 showMessage('PROMs generated successfully');
-                addPromSection.style.display = 'block'; // Show the 'Add New PROM' form
+                addPromSection.classList.remove('hidden');
             })
             .catch(error => {
                 console.error('Error:', error);
