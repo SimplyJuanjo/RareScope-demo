@@ -14,16 +14,25 @@
             </div>
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
+        <h4 class="mt-4">Uploaded Documents</h4>
+        <ul id="documents-list" class="list-group">
+            {% for document in documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ document.filename }}
+                <button class="btn btn-sm btn-danger delete-document" data-id="{{ document.id }}">Delete</button>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
     <div class="col-md-6">
         <h3>Generated PROMs</h3>
         <button id="generate-proms" class="btn btn-secondary mb-3">Generate PROMs</button>
-        <ul id="proms-list" class="list-group">
+        <ul id="proms-list" class="list-group" style="display: none;">
             <!-- PROMs will be dynamically added here -->
         </ul>
     </div>
 </div>
-<div class="row mt-4 hidden" id="add-prom-section">
+<div class="row mt-4" id="add-prom-section" style="display: none;">
     <div class="col-md-12">
         <h3>Add New PROM</h3>
         <form id="add-prom-form">

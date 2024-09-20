@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const promsList = document.getElementById('proms-list');
     const addPromForm = document.getElementById('add-prom-form');
     const addPromSection = document.getElementById('add-prom-section');
+    const documentsList = document.getElementById('documents-list');
     
     const messageContainer = document.createElement('div');
     messageContainer.className = 'alert';
@@ -37,11 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     promsList.appendChild(li);
                 });
-                addPromSection.classList.toggle('hidden', proms.length === 0);
+                promsList.style.display = 'block';
+                addPromSection.style.display = 'block';
             })
             .catch(error => {
                 console.error('Error fetching PROMs:', error);
             });
+    }
+
+    function addDocumentToList(docData) {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+            ${docData.filename}
+            <button class="btn btn-sm btn-danger delete-document" data-id="${docData.id}">Delete</button>
+        `;
+        documentsList.appendChild(li);
     }
 
     uploadForm.addEventListener('submit', function(e) {
@@ -56,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showMessage(data.message, data.status === 'error');
             if (data.status === 'success') {
                 this.reset();
+                addDocumentToList(data.document);
             }
         })
         .catch(error => {
@@ -75,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Response data:', data);
                 fetchProms();
                 showMessage(data.message || 'PROMs generated successfully');
-                addPromSection.classList.remove('hidden');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -144,5 +156,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    fetchProms();
+    // Add event listener for document deletion
+    if (documentsList) {
+        documentsList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-document')) {
+                const id = e.target.dataset.id;
+                if (confirm('Are you sure you want to delete this document?')) {
+                    fetch(`/dashboard/delete_document/${id}`, { method: 'DELETE' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success') {
+                                e.target.closest('li').remove();
+                                showMessage('Document deleted successfully');
+                            } else {
+                                showMessage(data.message || 'Failed to delete document', true);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showMessage('Failed to delete document', true);
+                        });
+                }
+            }
+        });
+    }
+
+    // Don't fetch PROMs on initial load
+    // fetchProms();
 });
