@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const messageContainer = document.createElement('div');
     messageContainer.className = 'alert';
-    document.querySelector('.container').insertBefore(messageContainer, document.querySelector('.row'));
+    messageContainer.style.display = 'none';
+    document.querySelector('.container').prepend(messageContainer);
 
     function showMessage(message, isError = false) {
         messageContainer.textContent = message;
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/get_proms')
             .then(response => response.json())
             .then(proms => {
-                console.log('Fetched PROMs:', proms);  // Add this line
+                console.log('Fetched PROMs:', proms);
                 promsList.innerHTML = '';
                 proms.forEach(prom => {
                     const li = document.createElement('li');
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 addPromSection.classList.toggle('hidden', proms.length === 0);
             })
             .catch(error => {
-                console.error('Error fetching PROMs:', error);  // Add this line
+                console.error('Error fetching PROMs:', error);
             });
     }
 
@@ -64,14 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     generatePromsBtn.addEventListener('click', function() {
-        console.log('Generate PROMs button clicked');  // Add this line
+        console.log('Generate PROMs button clicked');
         fetch('/generate_proms', { method: 'POST' })
             .then(response => {
-                console.log('Response status:', response.status);  // Add this line
+                console.log('Response status:', response.status);
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);  // Add this line
+                console.log('Response data:', data);
                 fetchProms();
                 showMessage(data.message || 'PROMs generated successfully');
                 addPromSection.classList.remove('hidden');
