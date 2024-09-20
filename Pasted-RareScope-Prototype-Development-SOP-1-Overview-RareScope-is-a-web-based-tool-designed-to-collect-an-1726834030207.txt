@@ -1,0 +1,68 @@
+RareScope Prototype Development SOP
+1. Overview
+RareScope is a web-based tool designed to collect and analyze patient-reported outcome measures (PROMs) for rare diseases using generative AI. The initial prototype aims to demonstrate core functionalities, user interactions, and data workflows using fake data.
+
+2. Objectives
+Develop a functional prototype mockup of RareScope.
+Showcase key features: user registration, document upload, AI-generated PROMs list, editing, ranking, and public access.
+Use fake data to simulate real user interactions and data processing.
+Ensure the prototype is responsive and user-friendly for demonstration purposes.
+3. Scope
+In Scope:
+
+User authentication (sign up/login) with email and social login options.
+Document upload functionality.
+AI-generated PROMs list based on uploaded documents (simulated with fake data).
+Editing, deleting, reviewing, and ranking PROMs items.
+Public access to the final PROMs list in JSON and CSV formats.
+Responsive design for both mobile and desktop views.
+Out of Scope:
+
+Integration with real AI services (GPT-4) – use static fake data instead.
+Full security implementations (use placeholders).
+Comprehensive backend functionality – focus on frontend mockup and basic backend structure.
+4. Functional Requirements
+User Authentication:
+
+Sign Up/Login: Users can register and log in using email or social accounts (e.g., Google, Facebook).
+Verification: Simulate email verification steps.
+Document Upload:
+
+Users can upload medical reports (PDF or DOCX formats).
+Display uploaded documents in a user-friendly manner.
+AI-Generated PROMs List:
+
+Upon document upload, display a simulated top 10 list of PROMs.
+Allow users to view, edit, delete, and rank PROMs.
+Editing and Ranking:
+
+Users can add new PROMs, edit existing ones, delete entries, and rank them by importance.
+Public Access:
+
+Provide a public page where visitors can view and download the PROMs list in JSON and CSV formats.
+Responsive Design:
+
+Ensure the prototype is accessible and functional on both mobile and desktop devices.
+5. Technical Specifications
+Front-End:
+Framework: Angular (latest stable version)
+UI Library: Angular Material or Bootstrap for consistent styling and responsive design
+Routing: Implement routing for different pages (e.g., Login, Dashboard, Public Access)
+Back-End:
+Runtime Environment: Node.js (latest LTS version)
+Framework: Express.js
+Database: MongoDB (use MongoDB Atlas with a free tier or local MongoDB instance)
+Authentication: Firebase Authentication (simulate with dummy data if actual integration is not feasible)
+Hosting:
+Platform: Azure (use Azure App Service for hosting the prototype)
+Deployment: Use Git for version control and Azure DevOps or GitHub Actions for CI/CD pipelines (optional for prototype)
+Fake Data:
+Users:
+Create dummy user accounts with predefined roles (Patient, Patient Organization).
+Documents:
+Use placeholder files for medical reports.
+PROMs List:
+Generate a static list of 10 fake PROMs relevant to a hypothetical rare disease.
+API Integration:
+AI Functionality:
+Simulate AI-generated PROMs by fetching from a predefined JSON file or using mock APIs.
