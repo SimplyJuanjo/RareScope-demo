@@ -33,7 +33,7 @@ def create_app():
     from public import public as public_blueprint
 
     app.register_blueprint(auth_blueprint)
-    app.register_blueprint(dashboard_blueprint)
+    app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
     app.register_blueprint(public_blueprint)
 
     @app.route('/')

@@ -1,15 +1,15 @@
+import os
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 from models import Document, PROM
 from extensions import db
-from werkzeug.utils import secure_filename
-import os
 from config import Config
 import fake_data
 
 dashboard = Blueprint('dashboard', __name__)
 
-@dashboard.route('/dashboard')
+@dashboard.route('/')
 @login_required
 def index():
     return render_template('dashboard.html')
@@ -24,6 +24,9 @@ def upload_document():
         return jsonify({'status': 'error', 'message': 'No selected file'}), 400
     if file and allowed_file(file.filename):
         try:
+            # Create the upload folder if it doesn't exist
+            os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
+            
             filename = secure_filename(file.filename)
             file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
             file.save(file_path)
