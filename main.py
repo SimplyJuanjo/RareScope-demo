@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from config import Config
 from extensions import db
 from models import User
@@ -17,6 +18,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
     db.init_app(app)
+    migrate = Migrate(app, db)
     
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

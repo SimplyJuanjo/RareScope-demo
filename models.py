@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(255))
     documents = db.relationship('Document', backref='owner', lazy='dynamic')
     proms = db.relationship('PROM', backref='user', lazy='dynamic')
 
