@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/get_proms')
             .then(response => response.json())
             .then(proms => {
+                console.log('Fetched PROMs:', proms);  // Add this line
                 promsList.innerHTML = '';
                 proms.forEach(prom => {
                     const li = document.createElement('li');
@@ -35,8 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     promsList.appendChild(li);
                 });
-                // Show or hide the add PROM section based on the existence of PROMs
                 addPromSection.classList.toggle('hidden', proms.length === 0);
+            })
+            .catch(error => {
+                console.error('Error fetching PROMs:', error);  // Add this line
             });
     }
 
@@ -61,11 +64,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     generatePromsBtn.addEventListener('click', function() {
+        console.log('Generate PROMs button clicked');  // Add this line
         fetch('/generate_proms', { method: 'POST' })
-            .then(response => response.json())
-            .then(() => {
+            .then(response => {
+                console.log('Response status:', response.status);  // Add this line
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);  // Add this line
                 fetchProms();
-                showMessage('PROMs generated successfully');
+                showMessage(data.message || 'PROMs generated successfully');
                 addPromSection.classList.remove('hidden');
             })
             .catch(error => {

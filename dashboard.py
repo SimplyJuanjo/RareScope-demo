@@ -78,6 +78,7 @@ def delete_prom(prom_id):
 def generate_proms():
     try:
         generated_proms = fake_data.generate_fake_proms()
+        print(f"Generated PROMs: {generated_proms}")  # Add this line for debugging
         for prom in generated_proms:
             new_prom = PROM(content=prom['content'], rank=prom['rank'], user_id=current_user.id)
             db.session.add(new_prom)
@@ -85,6 +86,7 @@ def generate_proms():
         return jsonify({'status': 'success', 'message': 'PROMs generated successfully'}), 201
     except Exception as e:
         db.session.rollback()
+        print(f"Error generating PROMs: {str(e)}")  # Add this line for debugging
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 def allowed_file(filename):
