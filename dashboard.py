@@ -76,12 +76,16 @@ def delete_prom(prom_id):
 @dashboard.route('/generate_proms', methods=['POST'])
 @login_required
 def generate_proms():
-    generated_proms = fake_data.generate_fake_proms()
-    for prom in generated_proms:
-        new_prom = PROM(content=prom['content'], rank=prom['rank'], user_id=current_user.id)
-        db.session.add(new_prom)
-    db.session.commit()
-    return jsonify(generated_proms), 201
+    try:
+        generated_proms = fake_data.generate_fake_proms()
+        for prom in generated_proms:
+            new_prom = PROM(content=prom['content'], rank=prom['rank'], user_id=current_user.id)
+            db.session.add(new_prom)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'PROMs generated successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 def allowed_file(filename):
     return '.' in filename and \
