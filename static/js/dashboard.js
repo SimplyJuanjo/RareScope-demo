@@ -3,6 +3,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const generatePromsBtn = document.getElementById('generate-proms');
     const promsList = document.getElementById('proms-list');
     const addPromForm = document.getElementById('add-prom-form');
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'alert';
+    document.querySelector('.container').insertBefore(messageContainer, document.querySelector('.row'));
+
+    function showMessage(message, isError = false) {
+        messageContainer.textContent = message;
+        messageContainer.className = `alert ${isError ? 'alert-danger' : 'alert-success'}`;
+        messageContainer.style.display = 'block';
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+        }, 5000);
+    }
 
     function fetchProms() {
         fetch('/get_proms')
@@ -33,10 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.message);
-            this.reset();
+            showMessage(data.message, data.status === 'error');
+            if (data.status === 'success') {
+                this.reset();
+            }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('An unexpected error occurred', true);
+        });
     });
 
     generatePromsBtn.addEventListener('click', function() {
@@ -44,8 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(() => {
                 fetchProms();
+                showMessage('PROMs generated successfully');
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Failed to generate PROMs', true);
+            });
     });
 
     addPromForm.addEventListener('submit', function(e) {
@@ -63,8 +84,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(() => {
             fetchProms();
             this.reset();
+            showMessage('PROM added successfully');
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('Failed to add PROM', true);
+        });
     });
 
     promsList.addEventListener('click', function(e) {
@@ -79,15 +104,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: JSON.stringify({ content }),
                 })
-                .then(() => fetchProms())
-                .catch(error => console.error('Error:', error));
+                .then(response => response.json())
+                .then(() => {
+                    fetchProms();
+                    showMessage('PROM updated successfully');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Failed to update PROM', true);
+                });
             }
         } else if (e.target.classList.contains('delete-prom')) {
             const id = e.target.dataset.id;
             if (confirm('Are you sure you want to delete this PROM?')) {
                 fetch(`/delete_prom/${id}`, { method: 'DELETE' })
-                    .then(() => fetchProms())
-                    .catch(error => console.error('Error:', error));
+                    .then(() => {
+                        fetchProms();
+                        showMessage('PROM deleted successfully');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessage('Failed to delete PROM', true);
+                    });
             }
         }
     });

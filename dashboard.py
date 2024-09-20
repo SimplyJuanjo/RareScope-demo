@@ -18,19 +18,23 @@ def index():
 @login_required
 def upload_document():
     if 'document' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
+        return jsonify({'status': 'error', 'message': 'No file part'}), 400
     file = request.files['document']
     if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        return jsonify({'status': 'error', 'message': 'No selected file'}), 400
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-        file.save(file_path)
-        new_document = Document(filename=filename, user_id=current_user.id)
-        db.session.add(new_document)
-        db.session.commit()
-        return jsonify({'message': 'File uploaded successfully'}), 200
-    return jsonify({'error': 'File type not allowed'}), 400
+        try:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
+            file.save(file_path)
+            new_document = Document(filename=filename, user_id=current_user.id)
+            db.session.add(new_document)
+            db.session.commit()
+            return jsonify({'status': 'success', 'message': 'File uploaded successfully'}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'}), 500
+    return jsonify({'status': 'error', 'message': 'File type not allowed'}), 400
 
 @dashboard.route('/get_proms', methods=['GET'])
 @login_required
@@ -53,7 +57,7 @@ def add_prom():
 def update_prom(prom_id):
     prom = PROM.query.get_or_404(prom_id)
     if prom.user_id != current_user.id:
-        return jsonify({'error': 'Unauthorized'}), 403
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     prom.content = request.json.get('content', prom.content)
     prom.rank = request.json.get('rank', prom.rank)
     db.session.commit()
@@ -64,7 +68,7 @@ def update_prom(prom_id):
 def delete_prom(prom_id):
     prom = PROM.query.get_or_404(prom_id)
     if prom.user_id != current_user.id:
-        return jsonify({'error': 'Unauthorized'}), 403
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
     db.session.delete(prom)
     db.session.commit()
     return '', 204
