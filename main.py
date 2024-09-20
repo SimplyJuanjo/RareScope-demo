@@ -3,10 +3,18 @@ from flask_login import LoginManager
 from config import Config
 from extensions import db
 from models import User
+import os
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    # Ensure the DATABASE_URL is set
+    if 'DATABASE_URL' not in os.environ:
+        raise ValueError("DATABASE_URL environment variable is not set")
+
+    # Set the SQLALCHEMY_DATABASE_URI from the environment variable
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
     db.init_app(app)
     

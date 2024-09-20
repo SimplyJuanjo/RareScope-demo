@@ -23,16 +23,27 @@ def signup():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        
+        # Check if user already exists
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email address already exists')
             return redirect(url_for('auth.signup'))
+        
+        # Create new user
         new_user = User(email=email)
         new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('dashboard.index'))
+        
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for('dashboard.index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An error occurred. Please try again. Error: {str(e)}')
+            return redirect(url_for('auth.signup'))
+    
     return render_template('signup.html')
 
 @auth.route('/logout')
