@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Public Access{% endblock %}
+
+{% block content %}
+<h2>Public PROMs List</h2>
+<div class="mb-3">
+    <a href="{{ url_for('public.get_proms_json') }}" class="btn btn-primary">Download JSON</a>
+    <a href="{{ url_for('public.get_proms_csv') }}" class="btn btn-secondary">Download CSV</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Content</th>
+        </tr>
+    </thead>
+    <tbody id="public-proms-list">
+        <!-- PROMs will be dynamically added here -->
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/public.js') }}"></script>
+{% endblock %}

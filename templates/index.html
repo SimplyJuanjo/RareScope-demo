@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to RareScope</h1>
+    <p class="lead">A web-based tool for collecting and analyzing patient-reported outcome measures (PROMs) for rare diseases.</p>
+    <hr class="my-4">
+    <p>Sign up or log in to start managing your PROMs.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('auth.signup') }}" role="button">Sign Up</a>
+    <a class="btn btn-secondary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ current_user.email }}</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Upload Document</h3>
+        <form id="upload-form" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="document" class="form-label">Select document (PDF or DOCX)</label>
+                <input type="file" class="form-control" id="document" name="document" accept=".pdf,.docx" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <h3>Generated PROMs</h3>
+        <button id="generate-proms" class="btn btn-secondary mb-3">Generate PROMs</button>
+        <ul id="proms-list" class="list-group">
+            <!-- PROMs will be dynamically added here -->
+        </ul>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3>Add New PROM</h3>
+        <form id="add-prom-form">
+            <div class="mb-3">
+                <label for="prom-content" class="form-label">PROM Content</label>
+                <input type="text" class="form-control" id="prom-content" required>
+            </div>
+            <div class="mb-3">
+                <label for="prom-rank" class="form-label">Rank</label>
+                <input type="number" class="form-control" id="prom-rank" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add PROM</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
