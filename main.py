@@ -32,9 +32,9 @@ def create_app():
     from dashboard import dashboard as dashboard_blueprint
     from public import public as public_blueprint
 
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
-    app.register_blueprint(public_blueprint)
+    app.register_blueprint(public_blueprint, url_prefix='/public')
 
     @app.route('/')
     def index():
@@ -47,4 +47,4 @@ app = create_app()
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
