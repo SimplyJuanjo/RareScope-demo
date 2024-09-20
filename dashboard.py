@@ -20,29 +20,36 @@ def index():
 def upload_document():
     if 'document' not in request.files:
         return jsonify({'status': 'error', 'message': 'No file part'}), 400
-    file = request.files['document']
-    if file.filename == '':
+    
+    files = request.files.getlist('document')
+    if not files or files[0].filename == '':
         return jsonify({'status': 'error', 'message': 'No selected file'}), 400
-    if file and allowed_file(file.filename):
-        try:
-            # Create the upload folder if it doesn't exist
-            os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
-            
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-            file.save(file_path)
-            new_document = Document(filename=filename, user_id=current_user.id)
-            db.session.add(new_document)
-            db.session.commit()
-            return jsonify({
-                'status': 'success', 
-                'message': 'File uploaded successfully',
-                'document': {'id': new_document.id, 'filename': new_document.filename}
-            }), 200
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'}), 500
-    return jsonify({'status': 'error', 'message': 'File type not allowed'}), 400
+
+    uploaded_documents = []
+    for file in files:
+        if file and allowed_file(file.filename):
+            try:
+                # Create the upload folder if it doesn't exist
+                os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
+                
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(Config.UPLOAD_FOLDER, filename)
+                file.save(file_path)
+                new_document = Document(filename=filename, user_id=current_user.id)
+                db.session.add(new_document)
+                uploaded_documents.append({'id': new_document.id, 'filename': new_document.filename})
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({'status': 'error', 'message': f'An error occurred: {str(e)}'}), 500
+        else:
+            return jsonify({'status': 'error', 'message': 'File type not allowed'}), 400
+
+    db.session.commit()
+    return jsonify({
+        'status': 'success', 
+        'message': 'Files uploaded successfully',
+        'documents': uploaded_documents
+    }), 200
 
 @dashboard.route('/get_proms', methods=['GET'])
 @login_required

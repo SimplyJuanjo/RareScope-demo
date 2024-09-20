@@ -12,13 +12,17 @@
             <h2>Upload Document</h2>
             <form id="upload-form" enctype="multipart/form-data">
                 <div class="file-input-wrapper">
-                    <input type="file" id="document" name="document" accept=".pdf,.docx" required>
-                    <label for="document"><i class="fas fa-cloud-upload-alt"></i> Choose file</label>
+                    <input type="file" id="document" name="document" accept=".pdf,.docx" multiple required>
+                    <label for="document"><i class="fas fa-cloud-upload-alt"></i> Choose files</label>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload</button>
+                <div id="selected-files"></div>
+                <button type="submit" class="btn btn-primary" id="upload-button" style="display: none;">
+                    <i class="fas fa-upload"></i> Upload
+                </button>
             </form>
         </section>
-        <section class="dashboard-section">
+        {% if documents %}
+        <section class="dashboard-section" id="documents-section">
             <h2>Uploaded Documents</h2>
             <ul id="documents-list" class="documents-list">
                 {% for document in documents %}
@@ -31,18 +35,19 @@
                 {% endfor %}
             </ul>
         </section>
+        {% endif %}
         <section class="dashboard-section">
             <h2>Generated PROMs</h2>
             <button id="generate-proms" class="btn btn-success mb-3"><i class="fas fa-sync"></i> Generate PROMs</button>
             <ul id="proms-list" class="proms-list"></ul>
-        </section>
-        <section id="add-prom-section" class="dashboard-section">
-            <h2>Add New PROM</h2>
-            <form id="add-prom-form">
-                <input type="text" id="prom-content" placeholder="PROM Content" required>
-                <input type="number" id="prom-rank" placeholder="Rank" required>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add PROM</button>
-            </form>
+            <div id="add-prom-container" style="display: none;">
+                <button id="show-add-prom" class="btn btn-primary mt-3"><i class="fas fa-plus"></i> Add New PROM</button>
+                <form id="add-prom-form" style="display: none;">
+                    <input type="text" id="prom-content" placeholder="PROM Content" required>
+                    <input type="number" id="prom-rank" placeholder="Rank" required>
+                    <button type="submit" class="btn btn-primary">Add PROM</button>
+                </form>
+            </div>
         </section>
     </main>
 </div>
