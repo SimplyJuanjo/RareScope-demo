@@ -32,12 +32,13 @@ body {
 }
 
 .dashboard-main {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
 }
 
 .dashboard-section {
+    width: 100%;
     background-color: #fff;
     border-radius: 8px;
     padding: 1.5rem;
@@ -173,4 +174,20 @@ input[type="text"]:focus, input[type="number"]:focus {
     .dashboard-main {
         grid-template-columns: 1fr;
     }
+}
+
+#add-prom-container {
+    margin-top: 1.5rem;
+}
+
+#add-prom-form {
+    margin-top: 1rem;
+}
+
+#add-prom-form input {
+    margin-bottom: 1rem;
+}
+
+#add-prom-form button {
+    margin-top: 0.5rem;
 }

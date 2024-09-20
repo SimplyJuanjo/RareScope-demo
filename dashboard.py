@@ -37,6 +37,7 @@ def upload_document():
                 file.save(file_path)
                 new_document = Document(filename=filename, user_id=current_user.id)
                 db.session.add(new_document)
+                db.session.flush()  # This will assign an ID to new_document
                 uploaded_documents.append({'id': new_document.id, 'filename': new_document.filename})
             except Exception as e:
                 db.session.rollback()
